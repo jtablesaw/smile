@@ -15,6 +15,7 @@
 package tech.tablesaw.api.ml.clustering;
 
 import smile.clustering.KMeans;
+import tech.tablesaw.api.DoubleColumn;
 import tech.tablesaw.api.NumberColumn;
 import tech.tablesaw.api.Table;
 import tech.tablesaw.columns.Column;
@@ -68,9 +69,8 @@ public class Kmeans {
     public Table clustered(Column labels) {
         Table table = Table.create("Clusters");
         StringColumn labelColumn = StringColumn.create("Label");
-        NumberColumn clusterColumn =NumberColumn.create("Cluster");
-        table.addColumn(labelColumn);
-        table.addColumn(clusterColumn);
+        NumberColumn clusterColumn = DoubleColumn.create("Cluster");
+        table.addColumns(labelColumn, clusterColumn);
         int[] clusters = kMeans.getClusterLabel();
         for (int i = 0; i < clusters.length; i++) {
             labelColumn.appendCell(labels.getString(i));
@@ -83,11 +83,11 @@ public class Kmeans {
     public Table labeledCentroids() {
         Table table = Table.create("Centroids");
         StringColumn labelColumn = StringColumn.create("Cluster");
-        table.addColumn(labelColumn);
+        table.addColumns(labelColumn);
 
         for (NumberColumn inputColumn : inputColumns) {
-            NumberColumn centroid =NumberColumn.create(inputColumn.name());
-            table.addColumn(centroid);
+            NumberColumn centroid = DoubleColumn.create(inputColumn.name());
+            table.addColumns(centroid);
         }
 
         double[][] centroids = kMeans.centroids();

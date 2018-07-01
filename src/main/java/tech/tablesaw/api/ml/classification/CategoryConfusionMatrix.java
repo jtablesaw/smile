@@ -17,6 +17,7 @@ package tech.tablesaw.api.ml.classification;
 import com.google.common.collect.Table;
 import com.google.common.collect.TreeBasedTable;
 import it.unimi.dsi.fastutil.ints.Int2ObjectMap;
+import tech.tablesaw.api.DoubleColumn;
 import tech.tablesaw.api.NumberColumn;
 import tech.tablesaw.api.StringColumn;
 
@@ -69,10 +70,10 @@ public class CategoryConfusionMatrix implements ConfusionMatrix {
         Table<String, String, Integer> sortedTable = sortedTable();
 
         tech.tablesaw.api.Table t = tech.tablesaw.api.Table.create("Confusion Matrix");
-        t.addColumn(StringColumn.create(""));
+        t.addColumns(StringColumn.create(""));
 
         for (String label : sortedTable.rowKeySet()) {
-            t.addColumn(NumberColumn.create(label));
+            t.addColumns(DoubleColumn.create(label));
             t.column(0).appendCell("Predicted " + label);
         }
 

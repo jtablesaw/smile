@@ -34,17 +34,17 @@ public class TableUniqueRecordsTest {
         table = Table.read().csv("data/bush.csv");
         table = table.first(4);
         table2 = Table.create("2 column version");
-        table2.addColumn(table.column(1), table.column(2));
+        table2.addColumns(table.column(1), table.column(2));
     }
 
     @Test
     public void testUniqueRecord() {
 
-        Table uniques = table.uniqueRecords();
+        Table uniques = table.dropDuplicateRows();
         assertEquals(table.rowCount(), uniques.rowCount());
         assertTrue(table.columnCount() == uniques.columnCount());
 
-        Table uniques2 = table2.uniqueRecords();
+        Table uniques2 = table2.dropDuplicateRows();
         assertTrue(table2.rowCount() > uniques2.rowCount());
         assertEquals(table2.columnCount(), uniques2.columnCount());
     }

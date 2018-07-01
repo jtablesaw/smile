@@ -42,7 +42,7 @@ public class FrequentItemsetExample {
         for (int i = 0; i < movie.size(); i++) {
             moviecat.appendCell(movie.getString(i));
         }
-        table.addColumn(moviecat);
+        table.addColumns(moviecat);
 
         out(table.numberColumn("user").unique().size());
         out(table.numberColumn("movie").unique().size());

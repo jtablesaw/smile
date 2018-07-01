@@ -17,6 +17,7 @@ package tech.tablesaw.api.ml.classification;
 import com.google.common.collect.Table;
 import com.google.common.collect.TreeBasedTable;
 
+import tech.tablesaw.api.DoubleColumn;
 import tech.tablesaw.api.NumberColumn;
 import tech.tablesaw.api.StringColumn;
 
@@ -63,7 +64,7 @@ public class StandardConfusionMatrix implements ConfusionMatrix {
 
     public tech.tablesaw.api.Table toTable() {
         tech.tablesaw.api.Table t = tech.tablesaw.api.Table.create("Confusion Matrix");
-        t.addColumn(StringColumn.create(""));
+        t.addColumns(StringColumn.create(""));
 
         // make a set of all the values needed, from the prediction set or the actual set
         TreeSet<Integer> allValues = new TreeSet<>();
@@ -71,7 +72,7 @@ public class StandardConfusionMatrix implements ConfusionMatrix {
         allValues.addAll(table.rowKeySet());
 
         for (Integer comparable : allValues) {
-            t.addColumn(NumberColumn.create(String.valueOf(labels.get(comparable))));
+            t.addColumns(DoubleColumn.create(String.valueOf(labels.get(comparable))));
             t.column(0).appendCell("Predicted " + labels.get(comparable));
         }
 

@@ -21,7 +21,7 @@ import tech.tablesaw.api.NumberColumn;
 import smile.association.FPGrowth;
 import smile.association.ItemSet;
 import tech.tablesaw.api.Table;
-import tech.tablesaw.table.ViewGroup;
+import tech.tablesaw.table.TableSliceGroup;
 import tech.tablesaw.api.StringColumn;
 import tech.tablesaw.table.TableSlice;
 
@@ -49,11 +49,10 @@ public class FrequentItemset {
     public FrequentItemset(NumberColumn sets, NumberColumn items, double supportThreshold) {
 
         Table temp = Table.create("temp");
-        temp.addColumn(sets.copy());
-        temp.addColumn(items.copy());
+        temp.addColumns(sets.copy(), items.copy());
         temp.sortAscendingOn(sets.name(), items.name());
 
-        ViewGroup baskets = temp.splitOn(temp.categoricalColumn(0));
+        TableSliceGroup baskets = temp.splitOn(temp.categoricalColumn(0));
 
         this.setCount = baskets.size();
 
@@ -76,13 +75,13 @@ public class FrequentItemset {
     public FrequentItemset(NumberColumn sets, StringColumn items, double support) {
 
         Table temp = Table.create("temp");
-        temp.addColumn(sets.copy());
+        temp.addColumns(sets.copy());
         NumberColumn encodedItems = items.asNumberColumn();
         encodedItems.setName(items.name());   // Needs t
-        temp.addColumn(encodedItems);
+        temp.addColumns(encodedItems);
         temp.sortAscendingOn(sets.name(), items.name());
 
-        ViewGroup baskets = temp.splitOn(temp.categoricalColumn(0));
+        TableSliceGroup baskets = temp.splitOn(temp.categoricalColumn(0));
 
         this.setCount = baskets.size();
 

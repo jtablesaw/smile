@@ -16,13 +16,14 @@ package tech.tablesaw.api.ml.association;
 
 import it.unimi.dsi.fastutil.ints.IntRBTreeSet;
 import it.unimi.dsi.fastutil.objects.Object2DoubleOpenHashMap;
+import tech.tablesaw.api.DoubleColumn;
 import tech.tablesaw.api.NumberColumn;
 import smile.association.ARM;
 import smile.association.AssociationRule;
 import tech.tablesaw.api.StringColumn;
 import tech.tablesaw.api.Table;
 import tech.tablesaw.table.TableSlice;
-import tech.tablesaw.table.ViewGroup;
+import tech.tablesaw.table.TableSliceGroup;
 
 import java.util.Arrays;
 import java.util.List;
@@ -43,11 +44,10 @@ public class AssociationRuleMining {
 
     public AssociationRuleMining(NumberColumn sets, NumberColumn items, double support) {
         Table temp = Table.create("temp");
-        temp.addColumn(sets.copy());
-        temp.addColumn(items.copy());
+        temp.addColumns(sets.copy(), items.copy());
         temp.sortAscendingOn(sets.name(), items.name());
 
-        ViewGroup baskets = temp.splitOn(temp.categoricalColumn(0));
+        TableSliceGroup baskets = temp.splitOn(temp.categoricalColumn(0));
         int[][] itemsets = new int[baskets.size()][];
         int basketIndex = 0;
         for (TableSlice basket : baskets) {
@@ -66,11 +66,10 @@ public class AssociationRuleMining {
 
     public AssociationRuleMining(NumberColumn sets, StringColumn items, double support) {
         Table temp = Table.create("temp");
-        temp.addColumn(sets.copy());
-        temp.addColumn(items.asNumberColumn());
+        temp.addColumns(sets.copy(), items.asNumberColumn());
         temp.sortAscendingOn(sets.name(), items.name());
 
-        ViewGroup baskets = temp.splitOn(temp.categoricalColumn(0));
+        TableSliceGroup baskets = temp.splitOn(temp.categoricalColumn(0));
         int[][] itemsets = new int[baskets.size()][];
         int basketIndex = 0;
         for (TableSlice basket : baskets) {
@@ -109,10 +108,11 @@ public class AssociationRuleMining {
                           Object2DoubleOpenHashMap<IntRBTreeSet> confidenceMap) {
 
         Table interestTable = Table.create("Interest");
-        interestTable.addColumn(StringColumn.create("Antecedent"));
-        interestTable.addColumn(StringColumn.create("Consequent"));
-        interestTable.addColumn(NumberColumn.create("Confidence"));
-        interestTable.addColumn(NumberColumn.create("Interest"));
+        interestTable.addColumns(
+                StringColumn.create("Antecedent"),
+                StringColumn.create("Consequent"),
+                DoubleColumn.create("Confidence"),
+                DoubleColumn.create("Interest"));
 
         List<AssociationRule> rules = model.learn(confidenceThreshold);
 

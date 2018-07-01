@@ -31,7 +31,7 @@ public class MoneyballExample {
         out(baseball.structure());
 
         // filter to the data available in the 2002 season
-        Table moneyball = baseball.selectWhere(QueryHelper.numberColumn("year").isLessThan(2002));
+        Table moneyball = baseball.where(QueryHelper.numberColumn("year").isLessThan(2002));
 
         // plot regular season wins against year, segregating on whether the team made the plays
         NumberColumn wins = moneyball.numberColumn("W");
@@ -41,7 +41,7 @@ public class MoneyballExample {
 
         // Calculate the run difference for use in the regression model
         NumberColumn runDifference = moneyball.numberColumn("RS").subtract(moneyball.numberColumn("RA"));
-        moneyball.addColumn(runDifference);
+        moneyball.addColumns(runDifference);
         runDifference.setName("RD");
 
         // Plot RD vs Wins to see if the relationship looks linear
@@ -75,7 +75,7 @@ public class MoneyballExample {
 
         // We use opponent OBP and opponent SLG to model the efficacy of our pitching and defence
 
-        Table moneyball2 = moneyball.selectWhere(QueryHelper.numberColumn("year").isGreaterThan(1998));
+        Table moneyball2 = moneyball.where(QueryHelper.numberColumn("year").isGreaterThan(1998));
         LeastSquares runsAllowed = LeastSquares.train(moneyball2.nCol("RA"),
                 moneyball2.nCol("OOBP"), moneyball2.nCol("OSLG"));
         out(runsAllowed);

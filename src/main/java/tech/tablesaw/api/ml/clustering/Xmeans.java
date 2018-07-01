@@ -14,6 +14,7 @@
 
 package tech.tablesaw.api.ml.clustering;
 
+import tech.tablesaw.api.DoubleColumn;
 import tech.tablesaw.api.NumberColumn;
 import smile.clustering.XMeans;
 import tech.tablesaw.api.StringColumn;
@@ -58,11 +59,11 @@ public class Xmeans {
     public Table labeledCentroids() {
         Table table = Table.create("Centroids");
         StringColumn labelColumn = StringColumn.create("Cluster");
-        table.addColumn(labelColumn);
+        table.addColumns(labelColumn);
 
         for (NumberColumn inputColumn : inputColumns) {
-            NumberColumn centroid =NumberColumn.create(inputColumn.name());
-            table.addColumn(centroid);
+            NumberColumn centroid = DoubleColumn.create(inputColumn.name());
+            table.addColumns(centroid);
         }
 
         double[][] centroids = model.centroids();

@@ -16,6 +16,7 @@ package tech.tablesaw.api.ml.classification;
 
 import org.junit.Test;
 import smile.classification.KNN;
+import tech.tablesaw.api.Row;
 import tech.tablesaw.api.Table;
 import tech.tablesaw.util.DoubleArrays;
 
@@ -40,12 +41,12 @@ public class ConfusionMatrixTest {
         int[] predicted = new int[test.rowCount()];
         SortedSet<Object> lableSet = new TreeSet<>(train.numberColumn(2).asIntegerSet());
         ConfusionMatrix confusion = new StandardConfusionMatrix(lableSet);
-        for (int row : test) {
+        for (Row row : test) {
             double[] data = new double[2];
-            data[0] = test.numberColumn(0).get(row);
-            data[1] = test.numberColumn(1).get(row);
-            predicted[row] = knn.predict(data);
-            confusion.increment((int) test.numberColumn(2).get(row), predicted[row]);
+            data[0] = test.numberColumn(0).get(row.getRowNumber());
+            data[1] = test.numberColumn(1).get(row.getRowNumber());
+            predicted[row.getRowNumber()] = knn.predict(data);
+            confusion.increment((int) test.numberColumn(2).get(row.getRowNumber()), predicted[row.getRowNumber()]);
         }
     }
 }

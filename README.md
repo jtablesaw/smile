@@ -1,6 +1,19 @@
 # smile
-tablesaw / smile integration code
+tablesaw  (https://github.com/jtablesaw/tablesaw) / smile (https://github.com/haifengl/smile) integration code
 
-This code is not being actively maintained as of April 1, 2018.
+This code is tested with Tablesaw version 0.20, as of July 1, 2018
 
-If you want to maintain it, please reach-out on github
+This project provides integration between Tablsaw, a Java-based dataframe and visualization package, and Smile, a Java-based machine learning library. Currently, the integration provides many common ML algorithms, including
+
+- Linear Regression
+- Logistic Regression
+- Decision Trees
+- KNN Classifiers
+- Linear Discriminant Analysis
+- Random Forests
+- Non-hierarchical clustering (K-means, G-means, and X-means)
+- Hierarchical clustering
+- Principal components
+- Association mining 
+- Frequent item sets 
+
