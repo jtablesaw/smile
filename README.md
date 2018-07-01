@@ -17,3 +17,4 @@ This project provides integration between Tablsaw, a Java-based dataframe and vi
 - Association mining 
 - Frequent item sets 
 
+This code is not currently in maven central. To use it, you can clone the repo and build with maven after you've installed tablesaw on your machine. 

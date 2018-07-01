@@ -6,7 +6,7 @@
 
     <groupId>tech.tablesaw</groupId>
     <artifactId>tablesaw-smile</artifactId>
-    <version>1.0.0-SNAPSHOT</version>
+    <version>0.20.0-SNAPSHOT</version>
 
     <packaging>jar</packaging>
 
