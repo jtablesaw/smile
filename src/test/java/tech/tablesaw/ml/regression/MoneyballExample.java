@@ -14,10 +14,19 @@
 
 package tech.tablesaw.ml.regression;
 
+import com.sun.deploy.trace.Trace;
 import tech.tablesaw.api.*;
 import tech.tablesaw.api.plot.Histogram;
 import tech.tablesaw.api.plot.Scatter;
 import tech.tablesaw.api.ml.regression.LeastSquares;
+import tech.tablesaw.plotly.Plot;
+import tech.tablesaw.plotly.components.Axis;
+import tech.tablesaw.plotly.components.Figure;
+import tech.tablesaw.plotly.components.Layout;
+import tech.tablesaw.plotly.traces.ScatterTrace;
+import tech.tablesaw.table.TableSliceGroup;
+
+import java.util.List;
 
 /**
  * An example doing ordinary least squares regression
@@ -37,7 +46,8 @@ public class MoneyballExample {
         NumberColumn wins = moneyball.numberColumn("W");
         NumberColumn year = moneyball.numberColumn("Year");
         CategoricalColumn playoffs = moneyball.categoricalColumn("Playoffs");
-        Scatter.show("Regular season wins by year", wins, year, moneyball.splitOn(playoffs));
+        scatterPlot("Regular season wins by year", moneyball,"W", "Year", "playoffs");
+        //Scatter.show("Regular season wins by year", wins, year, moneyball.splitOn(playoffs));
 
         // Calculate the run difference for use in the regression model
         NumberColumn runDifference = moneyball.numberColumn("RS").subtract(moneyball.numberColumn("RA"));
@@ -45,7 +55,8 @@ public class MoneyballExample {
         runDifference.setName("RD");
 
         // Plot RD vs Wins to see if the relationship looks linear
-        Scatter.show("RD x Wins", moneyball.numberColumn("RD"), moneyball.numberColumn("W"));
+        scatterPlot("RD x Wins", moneyball, "RD","W");
+        //Scatter.show("RD x Wins", moneyball.numberColumn("RD"), moneyball.numberColumn("W"));
 
         // Create the regression model
         //NumberColumn wins = moneyball.numberColumn("W");
@@ -70,8 +81,12 @@ public class MoneyballExample {
 
         Histogram.show(runsScored2.residuals());
 
-        Scatter.show(runsScored2.fitted(), runsScored2.residuals());
-        Scatter.show(runsScored2.actuals(), runsScored2.residuals());
+        //Scatter.show(runsScored2.fitted(), runsScored2.residuals());
+
+        scatterPlot("Fitted vs Residuals", "Fitted", runsScored2.fitted(), "Residuals", runsScored2.residuals());
+
+        //Scatter.show(runsScored2.actuals(), runsScored2.residuals());
+        scatterPlot("Actuals vs Residuals", "Actuals", runsScored2.actuals(), "Residuals", runsScored2.residuals());
 
         // We use opponent OBP and opponent SLG to model the efficacy of our pitching and defence
 
@@ -83,5 +98,74 @@ public class MoneyballExample {
 
     private static void out(Object o) {
         System.out.println(String.valueOf(o));
+    }
+
+    private static void scatterPlot(String title, Table table, String xCol, String yCol, String groupCol) {
+
+        TableSliceGroup tables = table.splitOn(table.categoricalColumn(groupCol));
+
+        Layout layout = Layout.builder()
+                .title(title)
+                .height(600)
+                .width(800)
+                .xAxis(Axis.builder()
+                        .title(xCol)
+                        .build())
+                .yAxis(Axis.builder()
+                        .title(yCol)
+                        .build())
+                .build();
+
+        ScatterTrace[] traces  = new ScatterTrace[2];
+        for (int i = 0; i < tables.size(); i++) {
+            List<Table> tableList = tables.asTableList();
+            traces[i] = ScatterTrace.builder(
+                    tableList.get(i).numberColumn(xCol),
+                    tableList.get(i).numberColumn(yCol))
+                    .build();
+        }
+        Figure figure = new Figure(layout, traces);
+        Plot.show(figure);
+    }
+
+    private static void scatterPlot(String title, Table table, String xCol, String yCol) {
+
+        Layout layout = Layout.builder()
+                .title(title)
+                .height(600)
+                .width(800)
+                .xAxis(Axis.builder()
+                        .title(xCol)
+                        .build())
+                .yAxis(Axis.builder()
+                        .title(yCol)
+                        .build())
+                .build();
+
+        ScatterTrace trace = ScatterTrace.builder(
+                    table.numberColumn(xCol),
+                    table.numberColumn(yCol))
+                    .build();
+        Figure figure = new Figure(layout, trace);
+        Plot.show(figure);
+    }
+
+    private static void scatterPlot(String title, String xTitle, double[] xCol, String yTitle, double[] yCol) {
+
+        Layout layout = Layout.builder()
+                .title(title)
+                .height(600)
+                .width(800)
+                .xAxis(Axis.builder()
+                        .title(xTitle)
+                        .build())
+                .yAxis(Axis.builder()
+                        .title(yTitle)
+                        .build())
+                .build();
+
+        ScatterTrace trace = ScatterTrace.builder(xCol, yCol).build();
+        Figure figure = new Figure(layout, trace);
+        Plot.show(figure);
     }
 }
